@@ -1,9 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { 
+  Dimensions,
+  StyleSheet, 
+  Text,
+  TextInput,
+  TouchableOpacity, 
+  View 
+} from 'react-native';
+const { width } = Dimensions.get('screen');
 
 export default function App() {
 
+  const [name, setName] = useState('Jonas Dhein');
   const [count, setCount] = useState(0);
   const [user, setUser] = useState({
     name: "Jonas Dhein",
@@ -11,11 +20,23 @@ export default function App() {
     city: "Teutônia"
   });
 
+  useEffect(() => {
+    console.log("TELA RECARREGADA!!!, tamanho: ", width);
+  })
+
+  useEffect(() => {
+    console.log("TELA CARREGADA!!!");
+  }, [])
+
+  useEffect(() => {
+    console.log("Count alterado: ", count);
+  }, [count])
+
   function somar() {
     setCount(prevState => prevState + 1);
   }
 
-  function subtrair() {
+  const subtrair = () => {
     if (count > 0) {
       setCount(count - 1);
     }
@@ -55,6 +76,13 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
+      <View style={styles.container}>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={value => setName(value)}
+        />
+      </View>
+
     </View>
   );
 }
@@ -77,21 +105,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textButton: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center'
+  margin: {
+    marginBottom: 4
+  },
+  subtitle: {
+    color: '#3498DB',
+    fontSize: 24,
   },
   text: {
     color: '#2C3E50',
     fontSize: 28,
     fontWeight: 'bold'
   },
-  subtitle: {
-    color: '#3498DB',
-    fontSize: 24,
+  textButton: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
-  margin: {
-    marginBottom: 4
+  textInput: {
+    backgroundColor: '#F5F5F5',
+    borderWidth: 1,
+    borderColor: '#9E9E9E',
+    borderRadius: 8,
+    fontSize: 20,
+    padding: 8,
+    width: width * 0.9,
+    height: 48
   }
 });
