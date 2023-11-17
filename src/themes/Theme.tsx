@@ -5,6 +5,7 @@ const { width } = Dimensions.get('window');
 export const theme = StyleSheet.create({
     button: {
       width: 100,
+      height: 48,
       borderWidth: 2,
       borderColor: '#000',
       borderRadius: 12,
@@ -23,7 +24,7 @@ export const theme = StyleSheet.create({
       marginBottom: 4
     },
     subtitle: {
-      color: '#FFF',
+      color: '#000',
       fontSize: 24,
     },
     title: {
