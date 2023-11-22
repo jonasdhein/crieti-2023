@@ -1,47 +1,116 @@
 import { useEffect, useState } from "react";
-import { 
-    SafeAreaView, 
-    Text, 
-    TextInput, 
-    TouchableOpacity, 
-    View 
+import {
+    SafeAreaView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from "react-native"
 import { theme } from "../themes/Theme"
+import { Feather } from '@expo/vector-icons';
 
 export const TasksScreen = () => {
-    
-    const [task, setTask] = useState<string>('');
-    const [tasks, setTasks] = useState<string[]>([]);
 
-    const saveTasks = () => {
-        setTasks([ ...tasks, task ]);
+    interface TaskProps {
+        id: number;
+        name: string;
+        checked: boolean;
     }
 
-    return(
-        <SafeAreaView>
-            <Text style={theme.title}>Minha Lista de Tarefas</Text>
-        
-            <TextInput
-                value={task}
-                onChangeText={setTask}
-                style={theme.textInput}
-            />
+    const initialTask: TaskProps = {
+        id: 0,
+        name: '',
+        checked: false
+    }
 
-            <TouchableOpacity
-                onPress={saveTasks}
-                style={theme.button}
-            >
-                <Text style={theme.textButton}>Salvar</Text>
-            </TouchableOpacity>
+    const [task, setTask] = useState<TaskProps>(initialTask);
+    const [tasks, setTasks] = useState<TaskProps[]>([]);
 
-            {
-                tasks.map((item, index) => {
-                    return(
-                        <Text key={index} style={theme.subtitle}>{item}</Text>
-                    )
-                })
+    const saveTasks = () => {
+        if (task.name.trim()) {
+
+            const payload: TaskProps = {
+                id: tasks.length + 1,
+                name: task.name,
+                checked: false
             }
 
-        </SafeAreaView>
+            setTasks([...tasks, payload]);
+        }
+
+        setTask(initialTask);
+    }
+
+    const setChecked = (task: TaskProps) => {
+        const newTasks = tasks.map((item) => {
+            if (item.id === task.id) {
+                return {
+                    ...item, checked: !item.checked
+                }
+            }
+            return item
+        })
+
+        setTasks(newTasks);
+    }
+
+    const deleteTask = (task: TaskProps) => {
+        const newTasks = tasks.filter((item) => item.id != task.id);
+
+        setTasks(newTasks);
+    }
+
+    return (
+        <View style={theme.container}>
+
+            <View style={theme.header}>
+                <Text style={[theme.title, theme.margin]}>Olá </Text>
+                <Text style={theme.subtitle}> Lista de Tarefas</Text>
+
+                <View style={theme.card}>
+                    <TextInput
+                        value={task.name}
+                        onChangeText={value => setTask({ ...task, name: value })}
+                        style={[theme.textInput, { width: '75%' }]}
+                    />
+
+                    <TouchableOpacity
+                        onPress={saveTasks}
+                        style={theme.button}
+                    >
+                        <Feather name="save" size={36} color="#2C3E50" />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <View style={theme.list}>
+                {
+                    tasks.map((item, index) => {
+                        return (
+                            <View
+                                key={index}
+                                style={theme.itemCard}>
+
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity
+                                        onPress={() => setChecked(item)}>
+                                        <Feather name={item.checked ? "check-square" : "square"}
+                                            size={24} color="#2C3E50" style={{ marginRight: 8 }} />
+                                    </TouchableOpacity>
+
+                                    <Text style={[theme.itemTask, item.checked ? theme.itemTaskChecked : null ]}>{item.name}</Text>
+                                </View>
+
+                                <TouchableOpacity
+                                    onPress={() => deleteTask(item)}>
+                                    <Feather name="trash-2" size={24} color="#2C3E50" />
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    })
+                }
+            </View>
+
+        </View>
     )
 }

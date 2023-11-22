@@ -4,31 +4,64 @@ const { width } = Dimensions.get('window');
 
 export const theme = StyleSheet.create({
     button: {
-      width: 100,
+      width: 48,
       height: 48,
-      borderWidth: 2,
-      borderColor: '#000',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    card: {
       borderRadius: 12,
-      padding: 12,
-      margin: 8
+      backgroundColor: '#f5f5f5',
+      marginVertical: 16,
+      flexDirection: 'row',
+      width: '100%',
+      justifyContent: 'space-between',
+      height: 48,
+    },
+    itemCard: {
+      backgroundColor: '#ECF0F1',
+      borderRadius: 8,
+      padding: 16,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginVertical: 8,
+      marginHorizontal: 16
+    },
+    list: {
+      marginTop: -22,
+      width: '100%'
     },
     containerButton: {
       flexDirection: 'row'
     },
     container: {
       flex: 1,
-      backgroundColor: '#FFF',
-      alignItems: 'center'
+    },
+    header: {
+      backgroundColor: '#7E57C2',
+      paddingTop: 44,
+      height: 210,
+      padding: 8,
+      borderBottomLeftRadius: 32,
+      borderBottomRightRadius: 32
     },
     margin: {
-      marginBottom: 4
+      marginBottom: 8
+    },
+    itemTask: {
+      color: '#2C3E50',
+      fontSize: 20,
+    },
+    itemTaskChecked: { 
+      textDecorationLine: 'line-through',
+      opacity: 0.5
     },
     subtitle: {
-      color: '#000',
-      fontSize: 24,
+      color: '#FFF',
+      fontSize: 20,
     },
     title: {
-      color: '#2C3E50',
+      color: '#FFF',
       fontSize: 28,
       fontWeight: 'bold'
     },
@@ -38,14 +71,8 @@ export const theme = StyleSheet.create({
       textAlign: 'center'
     },
     textInput: {
-      backgroundColor: '#F5F5F5',
-      borderWidth: 1,
-      borderColor: '#9E9E9E',
-      borderRadius: 8,
       fontSize: 20,
-      marginBottom: 8,
       padding: 8,
-      width: width * 0.9,
       height: 48
     },
     view1: {

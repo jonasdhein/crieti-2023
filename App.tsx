@@ -10,21 +10,13 @@ import { TasksScreen } from './src/screens/TasksScreen';
 export default function App() {
 
   return (
-    <View style={styles.container}>
-      <StatusBar style='auto'
+    <>
+      <StatusBar style='light'
       translucent={false}
-      backgroundColor='#FFF'
+      backgroundColor='#7E57C2'
       />
 
       <TasksScreen />
-    </View>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-    alignItems: 'center'
-  }
-});
