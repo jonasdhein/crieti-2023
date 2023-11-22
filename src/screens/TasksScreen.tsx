@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import {
+    FlatList,
     SafeAreaView,
+    ScrollView,
     Text,
     TextInput,
     TouchableOpacity,
@@ -60,6 +62,27 @@ export const TasksScreen = () => {
         setTasks(newTasks);
     }
 
+    const ItemView = ({ item }) => (
+        <View
+            style={theme.itemCard}>
+
+            <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity
+                    onPress={() => setChecked(item)}>
+                    <Feather name={item.checked ? "check-square" : "square"}
+                        size={24} color="#2C3E50" style={{ marginRight: 8 }} />
+                </TouchableOpacity>
+
+                <Text style={[theme.itemTask, item.checked ? theme.itemTaskChecked : null]}>{item.name}</Text>
+            </View>
+
+            <TouchableOpacity
+                onPress={() => deleteTask(item)}>
+                <Feather name="trash-2" size={24} color="#2C3E50" />
+            </TouchableOpacity>
+        </View>
+    )
+
     return (
         <View style={theme.container}>
 
@@ -83,33 +106,21 @@ export const TasksScreen = () => {
                 </View>
             </View>
 
-            <View style={theme.list}>
+            <FlatList 
+             data={tasks}
+             renderItem={({ item }) => <ItemView item={item} />}
+             keyExtractor={item => item.id.toString()}
+            />
+
+            {/* <ScrollView style={theme.list}>
                 {
                     tasks.map((item, index) => {
                         return (
-                            <View
-                                key={index}
-                                style={theme.itemCard}>
-
-                                <View style={{ flexDirection: 'row' }}>
-                                    <TouchableOpacity
-                                        onPress={() => setChecked(item)}>
-                                        <Feather name={item.checked ? "check-square" : "square"}
-                                            size={24} color="#2C3E50" style={{ marginRight: 8 }} />
-                                    </TouchableOpacity>
-
-                                    <Text style={[theme.itemTask, item.checked ? theme.itemTaskChecked : null ]}>{item.name}</Text>
-                                </View>
-
-                                <TouchableOpacity
-                                    onPress={() => deleteTask(item)}>
-                                    <Feather name="trash-2" size={24} color="#2C3E50" />
-                                </TouchableOpacity>
-                            </View>
+                            <ItemView item={item} index={index} />
                         )
                     })
                 }
-            </View>
+            </ScrollView> */}
 
         </View>
     )
