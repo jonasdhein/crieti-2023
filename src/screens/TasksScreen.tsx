@@ -73,7 +73,9 @@ export const TasksScreen = () => {
                         size={24} color="#2C3E50" style={{ marginRight: 8 }} />
                 </TouchableOpacity>
 
-                <Text style={[theme.itemTask, item.checked ? theme.itemTaskChecked : null]}>{item.name}</Text>
+                <Text style={[theme.itemTask, item.checked ? theme.itemTaskChecked : null]}>
+                    {item.name}
+                </Text>
             </View>
 
             <TouchableOpacity

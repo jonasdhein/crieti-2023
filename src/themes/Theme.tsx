@@ -51,6 +51,7 @@ export const theme = StyleSheet.create({
     itemTask: {
       color: '#2C3E50',
       fontSize: 20,
+      fontFamily: 'Inter_700Bold'
     },
     itemTaskChecked: { 
       textDecorationLine: 'line-through',
