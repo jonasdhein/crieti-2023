@@ -15,7 +15,8 @@ export default function App() {
 
   const [fontsLoaded, error ] = useFonts({
     'Exo2Light': require('./src/assets/fonts/Exo2-Light.ttf'),
-    'Exo2Regular': require('./src/assets/fonts/Exo2-Regular.ttf')
+    'Exo2Regular': require('./src/assets/fonts/Exo2-Regular.ttf'),
+    'Exo2Bold': require('./src/assets/fonts/Exo2-Bold.ttf')
   });
 
   const onLayoutRootView = useCallback(async () => {

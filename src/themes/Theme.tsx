@@ -49,6 +49,7 @@ export const theme = StyleSheet.create({
       marginBottom: 8
     },
     itemTask: {
+      flex: 1,
       color: '#2C3E50',
       fontSize: 20,
       fontFamily: 'Exo2Regular'
@@ -60,11 +61,12 @@ export const theme = StyleSheet.create({
     subtitle: {
       color: '#FFF',
       fontSize: 20,
+      fontFamily: 'Exo2Regular'
     },
     title: {
       color: '#FFF',
       fontSize: 28,
-      fontWeight: 'bold'
+      fontFamily: 'Exo2Bold'
     },
     textButton: {
       fontSize: 20,
@@ -74,7 +76,8 @@ export const theme = StyleSheet.create({
     textInput: {
       fontSize: 20,
       padding: 8,
-      height: 48
+      height: 48,
+      fontFamily: 'Exo2Regular'
     },
     view1: {
       justifyContent: 'center',

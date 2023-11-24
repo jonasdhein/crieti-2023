@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+    Alert,
     FlatList,
     SafeAreaView,
     ScrollView,
@@ -30,18 +31,18 @@ export const TasksScreen = () => {
     const [task, setTask] = useState<TaskProps>(initialTask);
     const [tasks, setTasks] = useState<TaskProps[]>([]);
 
-    const storeData = async (value : TaskProps[]) => {
-    
+    const storeData = async (value: TaskProps[]) => {
+
         const jsonValue = JSON.stringify(value);
         await AsyncStorage.setItem('tasks', jsonValue);
-    
+
     }
 
     const getData = async () => {
         const list = await AsyncStorage.getItem('tasks');
 
         const jsonValue = JSON.parse(list);
-        setTasks(jsonValue);
+        setTasks(jsonValue ? jsonValue : []); //verificando se o conteúdo de jsonValue é diferente de nulo
     }
 
     const saveTasks = () => {
@@ -78,10 +79,27 @@ export const TasksScreen = () => {
     }
 
     const deleteTask = (task: TaskProps) => {
-        const newTasks = tasks.filter((item) => item.id != task.id);
 
-        setTasks(newTasks);
-        storeData(newTasks);
+        Alert.alert(
+            'Excluir Tarefa',
+            'Tu tem certeza disso?',
+            [
+                {
+                    text: 'SIM',
+                    onPress: () => {
+                        const newTasks = tasks.filter((item) => item.id != task.id);
+
+                        setTasks(newTasks);
+                        storeData(newTasks);
+
+                        Alert.alert('Tarefa excluída', 'Tarefa excluída com sucesso!');
+                    }
+                },
+                {
+                    text: 'NÃO'
+                }
+            ]
+        );
     }
 
     useEffect(() => {
@@ -92,7 +110,7 @@ export const TasksScreen = () => {
     const ItemView = ({ item }) => (
         <View
             style={theme.itemCard}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
                 <TouchableOpacity
                     onPress={() => setChecked(item)}>
                     <Feather name={item.checked ? "check-square" : "square"}
@@ -133,7 +151,7 @@ export const TasksScreen = () => {
                         onPress={saveTasks}
                         style={theme.button}
                     >
-                        <Feather name="save" size={36} color="#2C3E50" />
+                        <Feather name="plus-square" size={36} color="#2C3E50" />
                     </TouchableOpacity>
                 </View>
             </View>
