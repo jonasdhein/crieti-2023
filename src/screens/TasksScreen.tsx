@@ -10,6 +10,8 @@ import {
 } from "react-native"
 import { theme } from "../themes/Theme"
 import { Feather } from '@expo/vector-icons';
+import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const TasksScreen = () => {
 
@@ -28,7 +30,22 @@ export const TasksScreen = () => {
     const [task, setTask] = useState<TaskProps>(initialTask);
     const [tasks, setTasks] = useState<TaskProps[]>([]);
 
+    const storeData = async (value : TaskProps[]) => {
+    
+        const jsonValue = JSON.stringify(value);
+        await AsyncStorage.setItem('tasks', jsonValue);
+    
+    }
+
+    const getData = async () => {
+        const list = await AsyncStorage.getItem('tasks');
+
+        const jsonValue = JSON.parse(list);
+        setTasks(jsonValue);
+    }
+
     const saveTasks = () => {
+
         if (task.name.trim()) {
 
             const payload: TaskProps = {
@@ -37,7 +54,10 @@ export const TasksScreen = () => {
                 checked: false
             }
 
-            setTasks([...tasks, payload]);
+            const list = [...tasks, payload];
+
+            setTasks(list);
+            storeData(list);
         }
 
         setTask(initialTask);
@@ -54,18 +74,24 @@ export const TasksScreen = () => {
         })
 
         setTasks(newTasks);
+        storeData(newTasks);
     }
 
     const deleteTask = (task: TaskProps) => {
         const newTasks = tasks.filter((item) => item.id != task.id);
 
         setTasks(newTasks);
+        storeData(newTasks);
     }
+
+    useEffect(() => {
+        getData();
+        console.log('buscou do banco de dados');
+    }, []);
 
     const ItemView = ({ item }) => (
         <View
             style={theme.itemCard}>
-
             <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
                     onPress={() => setChecked(item)}>
@@ -86,7 +112,11 @@ export const TasksScreen = () => {
     )
 
     return (
-        <View style={theme.container}>
+        <View style={{ height: '100%' }}>
+            <StatusBar style='light'
+                translucent={false}
+                backgroundColor='#7E57C2'
+            />
 
             <View style={theme.header}>
                 <Text style={[theme.title, theme.margin]}>Olá </Text>
@@ -96,7 +126,7 @@ export const TasksScreen = () => {
                     <TextInput
                         value={task.name}
                         onChangeText={value => setTask({ ...task, name: value })}
-                        style={[theme.textInput, { width: '75%' }]}
+                        style={[theme.textInput, { width: '80%' }]}
                     />
 
                     <TouchableOpacity
@@ -108,21 +138,15 @@ export const TasksScreen = () => {
                 </View>
             </View>
 
-            <FlatList 
-             data={tasks}
-             renderItem={({ item }) => <ItemView item={item} />}
-             keyExtractor={item => item.id.toString()}
-            />
-
-            {/* <ScrollView style={theme.list}>
-                {
-                    tasks.map((item, index) => {
-                        return (
-                            <ItemView item={item} index={index} />
-                        )
-                    })
-                }
-            </ScrollView> */}
+            {tasks.length > 0 ?
+                <FlatList
+                    data={tasks}
+                    renderItem={({ item }) => <ItemView item={item} />}
+                    keyExtractor={(item) => item.id.toString()}
+                />
+                :
+                <Text style={theme.textInput}>Sem Tarefas</Text>
+            }
 
         </View>
     )

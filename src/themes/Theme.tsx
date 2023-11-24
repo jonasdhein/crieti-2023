@@ -35,7 +35,7 @@ export const theme = StyleSheet.create({
       flexDirection: 'row'
     },
     container: {
-      flex: 1,
+      flex: 1
     },
     header: {
       backgroundColor: '#7E57C2',
@@ -51,7 +51,7 @@ export const theme = StyleSheet.create({
     itemTask: {
       color: '#2C3E50',
       fontSize: 20,
-      fontFamily: 'Inter_700Bold'
+      fontFamily: 'Exo2Regular'
     },
     itemTaskChecked: { 
       textDecorationLine: 'line-through',
