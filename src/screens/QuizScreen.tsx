@@ -1,4 +1,4 @@
-import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native"
+import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { useEffect, useState } from "react"
 
 export const QuizScreen = () => {
@@ -92,7 +92,7 @@ export const QuizScreen = () => {
 
         if (count + 1 < perguntas.length) {
             setCount(count + 1);
-        }else{
+        } else {
             setEncerrado(true);
         }
     }
@@ -108,6 +108,7 @@ export const QuizScreen = () => {
                             setAcertos(0);
                             setErros(0);
                             setCount(0);
+                            setEncerrado(false);
                         }
                     }
                 ]);
@@ -115,37 +116,53 @@ export const QuizScreen = () => {
 
     }, [encerrado])
 
+    useEffect(() => {
+
+        const progress = (count + 1) * 100 / perguntas.length;
+        console.log(`${(count + 1) * 100 / perguntas.length}%`)
+
+    }, [count])
+
     return (
-        <SafeAreaView style={style.container}>
-            <Text style={style.title}>{perguntas[count].titulo}</Text>
+        <SafeAreaView style={styles.container}>
 
-            <TouchableOpacity
-                onPress={() => validarResposta("altA")}
-                style={style.button}>
-                <Text style={style.alternative}>A) {perguntas[count].altA}</Text>
-            </TouchableOpacity>
+            <View style={styles.center}>
+                <Text style={styles.title}>{perguntas[count].titulo}</Text>
 
-            <TouchableOpacity
-                onPress={() => validarResposta("altB")}
-                style={style.button}>
-                <Text style={style.alternative}>B) {perguntas[count].altB}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => validarResposta("altA")}
+                    style={styles.button}>
+                    <Text style={styles.alternative}>A) {perguntas[count].altA}</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                onPress={() => validarResposta("altC")}
-                style={style.button}>
-                <Text style={style.alternative}>C) {perguntas[count].altC}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => validarResposta("altB")}
+                    style={styles.button}>
+                    <Text style={styles.alternative}>B) {perguntas[count].altB}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => validarResposta("altC")}
+                    style={styles.button}>
+                    <Text style={styles.alternative}>C) {perguntas[count].altC}</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={[styles.progressBar, { width: `${(count + 1) * 100 / perguntas.length}%` } ]}>
+            </View>
 
         </SafeAreaView>
     )
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'space-between'
+    },
+    center: {
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     button: {
         padding: 12,
@@ -155,11 +172,18 @@ const style = StyleSheet.create({
         color: '#2C3E50',
         fontSize: 30,
         fontFamily: 'Exo2Bold',
-        marginBottom: 12
+        marginBottom: 12,
+        paddingHorizontal: 12
     },
     alternative: {
         color: '#2C3E50',
         fontSize: 24,
         fontFamily: 'Exo2Regular'
+    },
+    progressBar: {
+        backgroundColor: '#2C3E50',
+        marginTop: 50,
+        height: 16,
+        width: '0%'
     }
 })
