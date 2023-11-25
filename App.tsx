@@ -7,6 +7,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { DemoScreen } from './src/screens/DemoScreen';
 import { TasksScreen } from './src/screens/TasksScreen';
 import { StorageScreen } from './src/screens/StorageScreen';
+import { QuizScreen } from './src/screens/QuizScreen';
+import { theme } from './src/themes/Theme';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -30,13 +32,14 @@ export default function App() {
   }
 
   return (
-    <View onLayout={onLayoutRootView}>
+    <View style={{ flex: 1 }} 
+      onLayout={onLayoutRootView}>
       <StatusBar style='dark'
-      translucent={false}
-      backgroundColor='#7E57C2'
+        translucent={false}
+        backgroundColor='#7E57C2'
       />
 
-      <TasksScreen />
+      <QuizScreen />
 
     </View>
   );
