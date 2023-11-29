@@ -9,6 +9,7 @@ import { TasksScreen } from './src/screens/TasksScreen';
 import { StorageScreen } from './src/screens/StorageScreen';
 import { QuizScreen } from './src/screens/QuizScreen';
 import { theme } from './src/themes/Theme';
+import { Routes } from './src/routes/Routes';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -39,7 +40,7 @@ export default function App() {
         backgroundColor='#7E57C2'
       />
 
-      <QuizScreen />
+      <Routes />
 
     </View>
   );

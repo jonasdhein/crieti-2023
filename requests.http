@@ -1,0 +1,5 @@
+GET https://viacep.com.br/ws/95890000/json/
+
+###
+
+GET http://177.44.248.24/pix-api/users/
