@@ -2,6 +2,12 @@ import { Dimensions, StyleSheet } from "react-native";
 
 const { width } = Dimensions.get('window');
 
+export const colors = {
+  text: '#2C3E50',
+  sent: '#C0392B',
+  received: '#27AE60',
+}
+
 export const theme = StyleSheet.create({
     button: {
       width: 48,
@@ -19,7 +25,7 @@ export const theme = StyleSheet.create({
       height: 48,
     },
     itemCard: {
-      backgroundColor: '#ECF0F1',
+      backgroundColor: '#E0E0E0',
       borderRadius: 8,
       padding: 16,
       flexDirection: 'row',

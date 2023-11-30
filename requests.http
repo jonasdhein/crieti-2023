@@ -3,3 +3,13 @@ GET https://viacep.com.br/ws/95890000/json/
 ###
 
 GET http://177.44.248.24/pix-api/users/
+###
+
+GET http://177.44.248.24/pix-api/pix/28/received
+
+###
+
+POST http://177.44.248.24/pix-api/pix/
+content-type: application/json
+
+{ "senderId": 1, "recipientId": 28, "value": 150.99 }

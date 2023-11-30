@@ -131,7 +131,7 @@ export const TasksScreen = () => {
 
     return (
         <View style={{ height: '100%' }}>
-            <StatusBar style='light'
+            <StatusBar style='dark'
                 translucent={false}
                 backgroundColor='#7E57C2'
             />
