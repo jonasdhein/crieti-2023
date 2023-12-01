@@ -29,6 +29,7 @@ export const theme = StyleSheet.create({
       borderRadius: 8,
       padding: 16,
       flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'space-between',
       marginVertical: 8,
       marginHorizontal: 16

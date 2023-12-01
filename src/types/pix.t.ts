@@ -7,6 +7,7 @@ export interface PixProps {
     senderId: number
     recipient: Recipient
     sender: Sender
+    balance?: number
   }
   
 interface Recipient {
