@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { CepProps } from '../types/cep.t';
+import { theme } from '../themes/Theme';
 
-export const CepScreen = () => {
+export const CepScreen = ({navigation}) => {
 
     const [cep, setCep] = useState<CepProps>({
         cep: "",
@@ -20,9 +21,6 @@ export const CepScreen = () => {
             //console.log(data);
             setCep(data);
 
-            
-
-
         } catch (e) {
             console.error(e);
         }
@@ -35,5 +33,11 @@ export const CepScreen = () => {
     return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Bairro: {cep.bairro}</Text>
+
+        <TouchableOpacity
+            onPress={() => navigation.navigate('MapScreen')}
+            style={theme.primaryButton}>
+            <Text style={{ color: '#FFF' }}>ABRIR MAPA</Text>
+        </TouchableOpacity>
     </View>);
 }

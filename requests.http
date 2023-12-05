@@ -12,4 +12,4 @@ GET http://177.44.248.24/pix-api/pix/31/sent
 POST http://177.44.248.24/pix-api/pix/
 content-type: application/json
 
-{ "senderId": 2, "recipientId": 2, "value": 199.50 }
+{ "senderId": 2, "recipientId": 31, "value": 199.50 }

@@ -15,6 +15,13 @@ export const theme = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    primaryButton: {
+      height: 48,
+      backgroundColor: colors.text,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 8
+    },
     card: {
       borderRadius: 12,
       backgroundColor: '#f5f5f5',
