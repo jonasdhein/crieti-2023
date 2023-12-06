@@ -5,10 +5,24 @@ import { DrawerRoutes } from './Drawer.routes';
 const Stack = createStackNavigator();
 
 export const StackRoutes = () => {
-    return(
+    return (
         <Stack.Navigator>
-            <Stack.Screen name='DrawerRoutes' component={DrawerRoutes} />
-            <Stack.Screen name='MapScreen' component={MapScreen} />
+            <Stack.Screen
+                name='DrawerRoutes'
+                component={DrawerRoutes}
+                options={
+                    {
+                        headerShown: false
+                    }
+                } />
+            <Stack.Screen
+                name='MapScreen'
+                component={MapScreen}
+                options={
+                    {
+                        headerShown: false
+                    }
+                } />
         </Stack.Navigator>
     )
 }

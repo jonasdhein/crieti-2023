@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { CepProps } from '../types/cep.t';
-import { theme } from '../themes/Theme';
+import { colors, theme } from '../themes/Theme';
 
-export const CepScreen = ({navigation}) => {
+export const CepScreen = ({ navigation }) => {
 
-    const [cep, setCep] = useState<CepProps>({
-        cep: "",
-        bairro: ""
-    } as CepProps);
+    console.log('API=>', process.env.EXPO_PUBLIC_API_KEY);
+
+    const [input, setInput] = useState<string>('');
+    const [cep, setCep] = useState<CepProps>({} as CepProps);
 
     const getCep = async () => {
         try {
@@ -17,9 +17,12 @@ export const CepScreen = ({navigation}) => {
             // .then(res => {
             //     console.log(res.data);
             // })
-            const { data } = await axios.get('https://viacep.com.br/ws/95906634/json/');
-            //console.log(data);
-            setCep(data);
+            const { data, status } = await axios.get(`https://viacep.com.br/ws/${input}/json/`);
+            if (status == 200) {
+                setCep(data);
+            } else {
+                Alert.alert('Atenção', 'O CEP informado não foi localizado');
+            }
 
         } catch (e) {
             console.error(e);
@@ -27,17 +30,42 @@ export const CepScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        getCep();
-    });
+        if (input.length == 8) {
+            getCep();
+        }
+    }, [input]);
 
     return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Bairro: {cep.bairro}</Text>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
-        <TouchableOpacity
-            onPress={() => navigation.navigate('MapScreen')}
-            style={theme.primaryButton}>
-            <Text style={{ color: '#FFF' }}>ABRIR MAPA</Text>
-        </TouchableOpacity>
-    </View>);
+            <TextInput
+                style={[styles.textInput, theme.fontRegular]}
+                keyboardType='numeric'
+                maxLength={8}
+                value={input}
+                onChangeText={setInput}
+            />
+
+            <Text style={theme.primarySubtitle}>UF: {cep.uf}</Text>
+            <Text style={theme.primarySubtitle}>Localidade: {cep.localidade}</Text>
+            <Text style={theme.primarySubtitle}>Bairro: {cep.bairro}</Text>
+            <Text style={theme.primarySubtitle}>{cep.logradouro}</Text>
+
+            <TouchableOpacity
+                onPress={() => navigation.navigate('MapScreen', { lat: -29.90, lon: -52.66 })}
+                style={theme.primaryButton}>
+                <Text style={{ color: '#FFF' }}>ABRIR MAPA</Text>
+            </TouchableOpacity>
+        </View>);
 }
+
+const styles = StyleSheet.create({
+    textInput: {
+        borderWidth: 1,
+        borderColor: colors.text,
+        borderRadius: 8,
+        height: 40,
+        padding: 8,
+        width: '90%'
+    }
+});
