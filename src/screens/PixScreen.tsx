@@ -16,23 +16,11 @@ const { width } = Dimensions.get("screen");
 
 export const PixScreen = ({ navigation }) => {
 
-    const { idPix } = useContext(AppContext);
+    const { getUser, user } = useContext(AppContext);
 
     const [load, isLoad] = useState<boolean>(false);
-    const [user, setUser] = useState<UserProps>({} as UserProps);
     const [listPix, setListPix] = useState<PixProps[]>([] as PixProps[]);
     const [chartData, setChartData] = useState<PixProps[]>([] as PixProps[]);
-
-    const getUser = async (id: number) => {
-
-        const { status, data } = await axios.get('/users');
-        if (status === 200) {
-            const user = data.filter(item => item.id === id);
-            if (user.length > 0) {
-                setUser(user[0]);
-            }
-        }
-    }
 
     const getListPix = async (id: number) => {
         try {
@@ -61,7 +49,7 @@ export const PixScreen = ({ navigation }) => {
                 .concat(listReceived)
                 .sort((a, b) => a.createdAt < b.createdAt ? -1 : 1)
                 .map((item) => {
-                    saldo += (item.recipientId == idPix ? item.value : -item.value);
+                    saldo += (item.recipientId == user.id ? item.value : -item.value);
                     return {
                         ...item, balance: saldo, date: formatDateShort(item.createdAt)
                     }
@@ -82,7 +70,7 @@ export const PixScreen = ({ navigation }) => {
         try {
             const { status, data } = await axios.post('/pix/',
                 {
-                    "senderId": idPix,
+                    "senderId": user.id,
                     "recipientId": 9,
                     "value": 33.10
                 }
@@ -90,7 +78,7 @@ export const PixScreen = ({ navigation }) => {
 
             console.log('STATUS_SEND=>', status);
             if (status === 200) {
-                getListPix(idPix);
+                getListPix(user.id);
             }
         } catch (err) {
             console.log('ERROR=>', err);
@@ -106,16 +94,21 @@ export const PixScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        getUser(idPix); //informe aqui o seu usuário
-        getListPix(idPix);
+        getUser();
     }, []);
+
+    useEffect(() => {
+        if (user.id > 0) {
+            getListPix(user.id);
+        }
+    }, [user]);
 
     const ItemPix = ({ item }) => (
         <View style={theme.itemCard}>
             <View style={{ flex: 0.65 }}>
                 <Text style={theme.fontLight}>{formatDate(item.createdAt)}</Text>
                 <Text style={theme.fontRegular}>
-                    {item.recipientId == idPix ? item.sender.name : item.recipient.name}
+                    {item.recipientId == user.id ? item.sender.name : item.recipient.name}
                 </Text>
             </View>
             <View style={{
@@ -123,11 +116,11 @@ export const PixScreen = ({ navigation }) => {
                 justifyContent: 'flex-end'
             }}>
                 <Feather
-                    name={item.recipientId == idPix ? "chevron-up" : "chevron-down"}
+                    name={item.recipientId == user.id ? "chevron-up" : "chevron-down"}
                     size={28}
-                    color={item.recipientId == idPix ? colors.received : colors.sent} />
+                    color={item.recipientId == user.id ? colors.received : colors.sent} />
                 <Text
-                    style={[styles.itemPix, { color: item.recipientId == idPix ? colors.received : colors.sent }]}>
+                    style={[styles.itemPix, { color: item.recipientId == user.id ? colors.received : colors.sent }]}>
                     {formatMoney(item.value)}
                 </Text>
             </View>
@@ -173,7 +166,7 @@ export const PixScreen = ({ navigation }) => {
             </VictoryChart>
 
             <FlatList
-                onRefresh={() => getListPix(idPix)}
+                onRefresh={() => getListPix(user.id)}
                 refreshing={load}
                 data={listPix}
                 renderItem={ItemPix}
