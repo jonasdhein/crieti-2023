@@ -38,7 +38,7 @@ export const CepScreen = ({ navigation }) => {
     return (
         <View style={theme.container}>
             <View style={[theme.header, styles.header]}>
-                <Text style={[styles.label, theme.fontRegular]}>CEP</Text>
+                <Text style={theme.title}>CEP</Text>
                 <TextInput
                     style={[styles.textInput, theme.fontRegular]}
                     keyboardType='numeric'
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 8,
         height: 40,
+        marginTop: 8,
         width: '100%'
     }
 });

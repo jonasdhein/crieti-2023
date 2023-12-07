@@ -167,9 +167,6 @@ export const PixScreen = ({ navigation }) => {
                 width={width} height={200}
                 theme={VictoryTheme.material}>
                 <VictoryBar
-                    animate={{
-                        easing: 'bounce'
-                    }}
                     data={chartData}
                     x="date"
                     y="balance" />
