@@ -14,3 +14,9 @@ export const formatDate = (date: string) => {
     });
 }
 
+export const formatDateShort = (date: string) => {
+    return format(parseISO(date), 'dd/MM', {
+        locale: ptBR
+    });
+}
+

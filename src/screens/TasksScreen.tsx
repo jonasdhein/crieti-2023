@@ -13,6 +13,7 @@ import { theme } from "../themes/Theme"
 import { Feather } from '@expo/vector-icons';
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LottieView from 'lottie-react-native';
 
 export const TasksScreen = () => {
 
@@ -131,11 +132,6 @@ export const TasksScreen = () => {
 
     return (
         <View style={{ height: '100%' }}>
-            <StatusBar style='dark'
-                translucent={false}
-                backgroundColor='#7E57C2'
-            />
-
             <View style={theme.header}>
                 <Text style={[theme.title, theme.margin]}>Olá </Text>
                 <Text style={theme.subtitle}> Lista de Tarefas</Text>
@@ -163,7 +159,18 @@ export const TasksScreen = () => {
                     keyExtractor={(item) => item.id.toString()}
                 />
                 :
-                <Text style={theme.textInput}>Sem Tarefas</Text>
+
+                <View style={theme.center}>
+                    <LottieView
+                        autoPlay
+                        style={{
+                            width: 200,
+                            height: 200,
+                        }}
+                        source={require('../assets/animations/anim_empty.json')}
+                    />
+                </View>
+
             }
 
         </View>

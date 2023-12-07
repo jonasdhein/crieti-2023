@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { CepProps } from '../types/cep.t';
 import { colors, theme } from '../themes/Theme';
@@ -36,36 +36,52 @@ export const CepScreen = ({ navigation }) => {
     }, [input]);
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={theme.container}>
+            <View style={[theme.header, styles.header]}>
+                <Text style={[styles.label, theme.fontRegular]}>CEP</Text>
+                <TextInput
+                    style={[styles.textInput, theme.fontRegular]}
+                    keyboardType='numeric'
+                    maxLength={8}
+                    value={input}
+                    onChangeText={setInput}
+                />
+            </View>
+            <View style={styles.body}>
+                <Text style={theme.primarySubtitle}>UF: {cep.uf}</Text>
+                <Text style={theme.primarySubtitle}>Localidade: {cep.localidade}</Text>
+                <Text style={theme.primarySubtitle}>Bairro: {cep.bairro}</Text>
+                <Text style={theme.primarySubtitle}>{cep.logradouro}</Text>
 
-            <TextInput
-                style={[styles.textInput, theme.fontRegular]}
-                keyboardType='numeric'
-                maxLength={8}
-                value={input}
-                onChangeText={setInput}
-            />
-
-            <Text style={theme.primarySubtitle}>UF: {cep.uf}</Text>
-            <Text style={theme.primarySubtitle}>Localidade: {cep.localidade}</Text>
-            <Text style={theme.primarySubtitle}>Bairro: {cep.bairro}</Text>
-            <Text style={theme.primarySubtitle}>{cep.logradouro}</Text>
-
-            <TouchableOpacity
-                onPress={() => navigation.navigate('MapScreen', { lat: -29.90, lon: -52.66 })}
-                style={theme.primaryButton}>
-                <Text style={{ color: '#FFF' }}>ABRIR MAPA</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('MapScreen', { lat: -29.90, lon: -52.66 })}
+                    style={theme.primaryButton}>
+                    <Text style={{ color: '#FFF' }}>ABRIR MAPA</Text>
+                </TouchableOpacity>
+            </View>
         </View>);
 }
 
 const styles = StyleSheet.create({
+    body: {
+        padding: 16
+    },
+    header: {
+        paddingHorizontal: 16,
+    },
+    label: {
+        marginTop: 22,
+        color: '#FFF',
+        fontSize: 20,
+        marginBottom: 8
+    },
     textInput: {
         borderWidth: 1,
-        borderColor: colors.text,
+        color: '#FFF',
+        borderColor: '#FFF',
         borderRadius: 8,
-        height: 40,
         padding: 8,
-        width: '90%'
+        height: 40,
+        width: '100%'
     }
 });

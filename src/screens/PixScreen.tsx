@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Dimensions, FlatList, ScrollView, StyleSheet, Text, View } from "react-native"
 import { VictoryChart, VictoryBar, VictoryLine, VictoryTheme, VictoryAxis, VictoryLabel } from 'victory-native';
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -7,14 +7,17 @@ import { UserProps } from '../types/user.t';
 import { colors, theme } from '../themes/Theme';
 import { PixProps } from '../types/pix.t';
 import { Feather } from '@expo/vector-icons';
-import { formatDate, formatMoney } from '../utils/utils';
+import { formatDate, formatDateShort, formatMoney } from '../utils/utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { AppContext } from '../contexts/AppContext';
+import * as Animatable from 'react-native-animatable';
 
 const { width } = Dimensions.get("screen");
 
-export const PixScreen = () => {
+export const PixScreen = ({ navigation }) => {
 
-    const myId = 31; //código da sua conta
+    const { idPix } = useContext(AppContext);
+
     const [load, isLoad] = useState<boolean>(false);
     const [user, setUser] = useState<UserProps>({} as UserProps);
     const [listPix, setListPix] = useState<PixProps[]>([] as PixProps[]);
@@ -22,7 +25,7 @@ export const PixScreen = () => {
 
     const getUser = async (id: number) => {
 
-        const { status, data } = await axios.get('http://177.44.248.24/pix-api/users');
+        const { status, data } = await axios.get('/users');
         if (status === 200) {
             const user = data.filter(item => item.id === id);
             if (user.length > 0) {
@@ -37,14 +40,14 @@ export const PixScreen = () => {
             let listSent = [];
             let listReceived = [];
 
-            const resSent = await axios.get(`http://177.44.248.24/pix-api/pix/${id}/sent`);
+            const resSent = await axios.get(`/pix/${id}/sent`);
             if (resSent.status === 200) {
                 if (resSent.data.length > 0) {
                     listSent = resSent.data;
                 }
             }
 
-            const resReceived = await axios.get(`http://177.44.248.24/pix-api/pix/${id}/received`);
+            const resReceived = await axios.get(`/pix/${id}/received`);
             if (resReceived.status === 200) {
                 if (resReceived.data.length > 0) {
                     listReceived = resReceived.data;
@@ -58,9 +61,9 @@ export const PixScreen = () => {
                 .concat(listReceived)
                 .sort((a, b) => a.createdAt < b.createdAt ? -1 : 1)
                 .map((item) => {
-                    saldo += (item.recipientId == myId ? item.value : -item.value);
+                    saldo += (item.recipientId == idPix ? item.value : -item.value);
                     return {
-                        ...item, balance: saldo
+                        ...item, balance: saldo, date: formatDateShort(item.createdAt)
                     }
                 });
 
@@ -77,9 +80,9 @@ export const PixScreen = () => {
 
     const sendPix = async () => {
         try {
-            const { status, data } = await axios.post('http://177.44.248.24/pix-api/pix/',
+            const { status, data } = await axios.post('/pix/',
                 {
-                    "senderId": myId,
+                    "senderId": idPix,
                     "recipientId": 9,
                     "value": 33.10
                 }
@@ -87,7 +90,7 @@ export const PixScreen = () => {
 
             console.log('STATUS_SEND=>', status);
             if (status === 200) {
-                getListPix(myId);
+                getListPix(idPix);
             }
         } catch (err) {
             console.log('ERROR=>', err);
@@ -103,23 +106,28 @@ export const PixScreen = () => {
     }
 
     useEffect(() => {
-        getUser(myId); //informe aqui o seu usuário
-        getListPix(myId);
+        getUser(idPix); //informe aqui o seu usuário
+        getListPix(idPix);
     }, []);
 
     const ItemPix = ({ item }) => (
         <View style={theme.itemCard}>
-            <View>
-                <Text>{formatDate(item.createdAt)}</Text>
-                <Text>{item.recipientId == myId ? item.sender.name : item.recipient.name}</Text>
+            <View style={{ flex: 0.65 }}>
+                <Text style={theme.fontLight}>{formatDate(item.createdAt)}</Text>
+                <Text style={theme.fontRegular}>
+                    {item.recipientId == idPix ? item.sender.name : item.recipient.name}
+                </Text>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{
+                flexDirection: 'row', flex: 0.3,
+                justifyContent: 'flex-end'
+            }}>
                 <Feather
-                    name={item.recipientId == myId ? "chevron-up" : "chevron-down"}
+                    name={item.recipientId == idPix ? "chevron-up" : "chevron-down"}
                     size={28}
-                    color={item.recipientId == myId ? colors.received : colors.sent} />
+                    color={item.recipientId == idPix ? colors.received : colors.sent} />
                 <Text
-                    style={[styles.itemPix, { color: item.recipientId == myId ? colors.received : colors.sent }]}>
+                    style={[styles.itemPix, { color: item.recipientId == idPix ? colors.received : colors.sent }]}>
                     {formatMoney(item.value)}
                 </Text>
             </View>
@@ -128,58 +136,47 @@ export const PixScreen = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <View
-                style={[theme.header, { justifyContent: 'space-between', height: 180 }]}>
+            <Animatable.View
+                animation='fadeInDown'
+                style={[theme.header, styles.headerPix]}>
                 <View>
                     <Text style={theme.subtitle}>Olá</Text>
                     <Text style={theme.title}>{user.name}</Text>
                 </View>
-                <View style={{ alignItems: 'flex-end', marginRight: 16 }}>
-                    <Text style={theme.title}>{getSaldo()}</Text>
-                    <Text style={theme.subtitle}>Saldo</Text>
+                <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={styles.buttonPix}
+                        onPress={() => {
+                            navigation.navigate('SendPixScreen');
+                        }
+                        }
+                    >
+                        <Text style={[theme.fontRegular, styles.textButtonPix]}>Enviar PIX</Text>
+                        <Feather name="send" size={26} color="#FFF" />
+                    </TouchableOpacity>
+                    <View style={{ marginRight: 16 }}>
+                        <Text style={theme.title}>{getSaldo()}</Text>
+                        <Text style={theme.subtitle}>Saldo</Text>
+                    </View>
                 </View>
-            </View>
 
-            <TouchableOpacity
-                onPress={() => {
-                    Alert.alert('Confirmação', 'Deseja mesmo enviar um PIX?',
-                        [
-                            {
-                                text: 'SIM',
-                                onPress: () => sendPix()
-                            },
-                            {
-                                text: 'NÃO'
-                            }
-                        ])
-                }}
-                style={styles.button}>
-                <Text style={theme.subtitle}>Enviar PIX de Teste</Text>
-            </TouchableOpacity>
+            </Animatable.View>
 
             <VictoryChart
                 minDomain={{ y: 0 }}
                 width={width} height={200}
                 theme={VictoryTheme.material}>
-                <VictoryLine
+                <VictoryBar
                     animate={{
                         easing: 'bounce'
                     }}
-                    interpolation='natural'
                     data={chartData}
-                    x="createdAt"
+                    x="date"
                     y="balance" />
-                <VictoryAxis
-                    theme={VictoryTheme.material}
-                    axisLabelComponent={<VictoryLabel dy={20} />}
-                    label="Evolução do Saldo"
-                    style={{
-                        tickLabels: { fill: "transparent" }
-                    }} />
             </VictoryChart>
 
             <FlatList
-                onRefresh={() => getListPix(myId)}
+                onRefresh={() => getListPix(idPix)}
                 refreshing={load}
                 data={listPix}
                 renderItem={ItemPix}
@@ -191,6 +188,14 @@ export const PixScreen = () => {
 }
 
 const styles = StyleSheet.create({
+    buttonPix: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 8,
+        borderColor: '#FFF',
+        borderWidth: 1,
+        padding: 8
+    },
     button: {
         backgroundColor: colors.received,
         borderRadius: 16,
@@ -198,10 +203,19 @@ const styles = StyleSheet.create({
         padding: 16,
         width: 200
     },
+    headerPix: {
+        justifyContent: 'space-between',
+        paddingBottom: 16
+    },
     itemPix: {
         color: colors.text,
         fontSize: 20,
         alignItems: 'flex-end',
         fontFamily: 'Exo2Regular'
+    },
+    textButtonPix: {
+        marginRight: 8,
+        fontSize: 22,
+        color: '#FFF'
     }
 });

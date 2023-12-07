@@ -10,6 +10,10 @@ GET http://177.44.248.24/pix-api/pix/31/sent
 
 ###
 
+GET http://177.44.248.24/pix-api/pix/31/received
+
+###
+
 POST http://177.44.248.24/pix-api/pix/
 content-type: application/json
 

@@ -1,11 +1,14 @@
-import { TouchableOpacity, StyleSheet, Text, View } from "react-native"
+import { TouchableOpacity, StyleSheet, Text, View, StatusBar } from "react-native"
 import MapView from 'react-native-maps';
 import { colors, theme } from "../themes/Theme"
 import { Feather } from "@expo/vector-icons";
+import Constants from 'expo-constants';
 
 export const MapScreen = ({ navigation, route }) => {
 
   console.log(route.params)
+
+  console.log('H', Constants.statusBarHeight)
 
   return (
     <View style={theme.container}>
@@ -33,7 +36,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 8,
     position: 'absolute',
-    top: 20,
+    top: Constants.statusBarHeight,
     left: 10,
     zIndex: 1
   },

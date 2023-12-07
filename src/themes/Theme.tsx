@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
+import Constants from 'expo-constants';
 
 const { width } = Dimensions.get('window');
 
@@ -20,6 +21,7 @@ export const theme = StyleSheet.create({
     backgroundColor: colors.text,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 16,
     padding: 8
   },
   card: {
@@ -31,7 +33,13 @@ export const theme = StyleSheet.create({
     justifyContent: 'space-between',
     height: 48,
   },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   itemCard: {
+    flex: 1,
     backgroundColor: '#E0E0E0',
     borderRadius: 8,
     padding: 16,
@@ -49,15 +57,15 @@ export const theme = StyleSheet.create({
     flexDirection: 'row'
   },
   container: {
-    flex: 1
+    flex: 1,
   },
   header: {
     backgroundColor: '#7E57C2',
-    paddingTop: 44,
-    height: 210,
-    padding: 8,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32
+    paddingTop: Constants.statusBarHeight,
+    height: 160 + Constants.statusBarHeight,
+    paddingHorizontal: 8,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24
   },
   margin: {
     marginBottom: 8
@@ -99,8 +107,12 @@ export const theme = StyleSheet.create({
     fontFamily: 'Exo2Regular'
   },
   fontRegular: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Exo2Regular'
+  },
+  fontLight: {
+    fontSize: 14,
+    fontFamily: 'Exo2Light'
   },
   view1: {
     justifyContent: 'center',
