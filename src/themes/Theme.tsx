@@ -42,7 +42,7 @@ export const theme = StyleSheet.create({
     flex: 1,
     backgroundColor: '#E0E0E0',
     borderRadius: 8,
-    padding: 16,
+    padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

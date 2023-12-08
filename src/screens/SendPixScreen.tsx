@@ -1,12 +1,18 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../themes/Theme";
 import { Feather } from "@expo/vector-icons";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../contexts/AppContext";
+import { Picker } from '@react-native-picker/picker';
 
 export const SendPixScreen = ({ navigation }) => {
 
-    const { user } = useContext(AppContext);
+    const { user, balance, listUsers, users } = useContext(AppContext);
+    const [recipientId, setRecipientId] = useState();
+
+    useEffect(() => {
+        listUsers();
+    }, []);
 
     return (
         <View style={theme.container}>
@@ -23,6 +29,21 @@ export const SendPixScreen = ({ navigation }) => {
                     <Text style={theme.title}>{user.name}</Text>
                 </View>
             </View>
+
+            <Picker
+                selectedValue={recipientId}
+                onValueChange={(itemValue, itemIndex) =>
+                    setRecipientId(itemValue)
+                }>
+                {
+                    users.map((item) => {
+                        return (
+                            <Picker.Item label={item.name} value={item.id} />
+                        )
+                    }
+                    )
+                }
+            </Picker>
 
         </View>
     );

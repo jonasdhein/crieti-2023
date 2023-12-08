@@ -55,7 +55,6 @@ export const PixScreen = ({ navigation }) => {
                     }
                 });
 
-
             setChartData(newListChart);
             setListPix(newList);
             isLoad(false);
@@ -63,33 +62,6 @@ export const PixScreen = ({ navigation }) => {
         } catch (err) {
             isLoad(false);
             console.log('ERROR', err);
-        }
-    }
-
-    const sendPix = async () => {
-        try {
-            const { status, data } = await axios.post('/pix/',
-                {
-                    "senderId": user.id,
-                    "recipientId": 9,
-                    "value": 33.10
-                }
-            );
-
-            console.log('STATUS_SEND=>', status);
-            if (status === 200) {
-                getListPix(user.id);
-            }
-        } catch (err) {
-            console.log('ERROR=>', err);
-        }
-    }
-
-    const getSaldo = () => {
-        if (chartData.length > 0) {
-            return formatMoney(chartData[chartData.length - 1].balance);
-        } else {
-            return formatMoney(0);
         }
     }
 
@@ -112,12 +84,13 @@ export const PixScreen = ({ navigation }) => {
                 </Text>
             </View>
             <View style={{
-                flexDirection: 'row', flex: 0.3,
-                justifyContent: 'flex-end'
+                flex: 0.35,
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
             }}>
                 <Feather
-                    name={item.recipientId == user.id ? "chevron-up" : "chevron-down"}
-                    size={28}
+                    name={item.recipientId == user.id ? "plus" : "minus"}
+                    size={22}
                     color={item.recipientId == user.id ? colors.received : colors.sent} />
                 <Text
                     style={[styles.itemPix, { color: item.recipientId == user.id ? colors.received : colors.sent }]}>
@@ -148,7 +121,7 @@ export const PixScreen = ({ navigation }) => {
                         <Feather name="send" size={26} color="#FFF" />
                     </TouchableOpacity>
                     <View style={{ marginRight: 16 }}>
-                        <Text style={theme.title}>{getSaldo()}</Text>
+                        <Text style={theme.title}>{formatMoney(0)}</Text>
                         <Text style={theme.subtitle}>Saldo</Text>
                     </View>
                 </View>
@@ -199,7 +172,7 @@ const styles = StyleSheet.create({
     },
     itemPix: {
         color: colors.text,
-        fontSize: 20,
+        fontSize: 18,
         alignItems: 'flex-end',
         fontFamily: 'Exo2Regular'
     },
