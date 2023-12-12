@@ -129,10 +129,14 @@ export const PixScreen = ({ navigation }) => {
             </Animatable.View>
 
             <VictoryChart
+                domainPadding={{ x: 25 }}
+                padding={{ top: 20, left: 40, right: 20, bottom: 40 }}
                 minDomain={{ y: 0 }}
                 width={width} height={200}
                 theme={VictoryTheme.material}>
                 <VictoryBar
+                    barRatio={0.6}
+                    cornerRadius={6}
                     data={chartData}
                     x="date"
                     y="balance" />

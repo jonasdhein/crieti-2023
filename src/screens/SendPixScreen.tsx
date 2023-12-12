@@ -9,7 +9,7 @@ import { SendProps } from "../types/send.t";
 export const SendPixScreen = ({ navigation }) => {
 
     const { user, balance, listUsers, users } = useContext(AppContext);
-    
+
     const [sender, setSender] = useState<SendProps>({} as SendProps);
 
     useEffect(() => {
@@ -58,7 +58,7 @@ export const SendPixScreen = ({ navigation }) => {
                         keyboardType='numeric'
                         placeholder="Valor"
                         value={sender.value ? sender.value.toString() : ''}
-                        onChangeText={value => setSender({...sender, value: value ? Number.parseFloat(value) : 0 })}
+                        onChangeText={value => setSender({ ...sender, value: value ? Number.parseFloat(value) : 0 })}
                     />
 
                 </View>
