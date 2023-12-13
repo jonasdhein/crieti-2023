@@ -19,31 +19,36 @@ export const SendPixScreen = ({ navigation }) => {
     }, []);
 
     const handleSend = async () => {
-        try{
+        try {
 
-            if(sender.recipientId == undefined || sender.recipientId <= 0){
+            if (sender.recipientId == undefined || sender.recipientId <= 0) {
                 Alert.alert('Destinatário Inválido');
                 return;
             }
 
-            if(sender.value == undefined || sender.value <= 0){
+            if (sender.value == undefined || sender.value <= 0) {
                 Alert.alert('Informe um valor válido');
                 return;
             }
 
-            if(user.id <= 0){
+            if (balance - sender.value < 3000) {
+                Alert.alert('Você ultrapassou o limite do cheque especial');
+                return;
+            }
+
+            if (user.id <= 0) {
                 Alert.alert('Usuário não definido');
                 return;
             }
-            
-            const payload:SendProps = {
+
+            const payload: SendProps = {
                 recipientId: sender.recipientId,
                 value: sender.value,
                 senderId: user.id
             }
 
             let retorno = await sendPix(payload);
-            if(retorno){
+            if (retorno) {
                 Alert.alert('Sucesso', 'PIX enviado com sucesso!',
                     [
                         {
@@ -56,7 +61,7 @@ export const SendPixScreen = ({ navigation }) => {
                 )
             }
 
-        }catch(err){
+        } catch (err) {
             console.log(err.message);
         }
     }
@@ -77,7 +82,7 @@ export const SendPixScreen = ({ navigation }) => {
                 </View>
                 <View style={{ justifyContent: 'flex-end', flexDirection: 'row' }}>
                     <View style={{ marginRight: 16 }}>
-                        <Text style={theme.title}>{formatMoney(balance)}</Text>
+                        <Text style={[theme.title, { fontSize: balance.toString().length > 10 ? 18 : 28 }]}>{formatMoney(balance)}</Text>
                         <Text style={theme.subtitle}>Saldo</Text>
                     </View>
                 </View>
@@ -91,7 +96,7 @@ export const SendPixScreen = ({ navigation }) => {
                     onValueChange={(itemValue) =>
                         setSender({ ...sender, recipientId: itemValue })
                     }>
-                        <Picker.Item key={-1} label="Selecione..." value={0} />
+                    <Picker.Item key={-1} label="Selecione..." value={0} />
                     {
                         users.map((item, index) => {
                             return (
@@ -107,9 +112,9 @@ export const SendPixScreen = ({ navigation }) => {
                     <Text style={[theme.fontRegular, styles.label]}>Valor:</Text>
                     <TextInput
                         style={[styles.textInput, theme.fontRegular]}
-                        keyboardType='numeric'
+                        keyboardType='numbers-and-punctuation'
                         placeholder="Valor"
-                        value={sender.value ? sender.value.toString() : ''}
+                        value={sender.value ? (sender.value.toString()) : ''}
                         onChangeText={value => setSender({ ...sender, value: value ? Number.parseFloat(value) : 0 })}
                     />
 

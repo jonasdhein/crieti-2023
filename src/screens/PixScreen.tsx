@@ -20,6 +20,8 @@ export const PixScreen = ({ navigation }) => {
     const isFocused = useIsFocused();
 
     const [load, isLoad] = useState<boolean>(false);
+    const [min, setMin] = useState<number>(0);
+    const [max, setMax] = useState<number>(0);
     const [listPix, setListPix] = useState<PixProps[]>([] as PixProps[]);
     const [chartData, setChartData] = useState<PixProps[]>([] as PixProps[]);
 
@@ -35,22 +37,35 @@ export const PixScreen = ({ navigation }) => {
 
             const newList = listSent.concat(listReceived).sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
 
+            let xMax = 0;
+            let xMin = 0;
             let saldo = 0;
             const newListChart = listSent
                 .concat(listReceived)
                 .sort((a, b) => a.createdAt < b.createdAt ? -1 : 1)
                 .map((item) => {
                     saldo += (item.recipientId == user.id ? item.value : -item.value);
+
+                    if(saldo < xMin){
+                        xMin = saldo;
+                    }
+                    if(saldo > xMax){
+                        xMax = saldo;
+                    }
+
                     return {
                         ...item, balance: saldo, date: formatDateShort(item.createdAt)
                     }
                 });
 
-            console.log('SALDO ATUALIZADO = ', saldo);
+            console.log('DIGITOS = ', saldo.toString().length);
+            console.log('SALDO = ', saldo.toString());
             setBalance(saldo);
 
             setChartData(newListChart);
             setListPix(newList);
+            setMax(xMax);
+            setMin(xMin);
             isLoad(false);
 
         } catch (err) {
@@ -115,7 +130,7 @@ export const PixScreen = ({ navigation }) => {
                         <Feather name="send" size={26} color="#FFF" />
                     </TouchableOpacity>
                     <View style={{ marginRight: 16 }}>
-                        <Text style={theme.title}>{formatMoney(balance)}</Text>
+                        <Text style={[theme.title, { fontSize: balance.toString().length > 10 ? 18 : 28 } ]}>{formatMoney(balance)}</Text>
                         <Text style={theme.subtitle}>Saldo</Text>
                     </View>
                 </View>
@@ -124,9 +139,9 @@ export const PixScreen = ({ navigation }) => {
 
             <VictoryChart
                 domainPadding={{ x: 25 }}
-                padding={{ top: 20, left: 40, right: 20, bottom: 40 }}
-                minDomain={{ y: -100 }}
-                maxDomain={{ y: 500 }}
+                padding={{ top: 20, left: 90, right: 20, bottom: 40 }}
+                minDomain={{ y: min }}
+                maxDomain={{ y: max }}
                 width={width} height={200}
                 theme={VictoryTheme.material}>
                 <VictoryBar
