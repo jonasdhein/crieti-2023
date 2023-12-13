@@ -4,6 +4,7 @@ import Constants from 'expo-constants';
 const { width } = Dimensions.get('window');
 
 export const colors = {
+  primary: '#7E57C2',
   text: '#2C3E50',
   sent: '#C0392B',
   received: '#27AE60',
@@ -60,7 +61,7 @@ export const theme = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: '#7E57C2',
+    backgroundColor: colors.primary,
     paddingTop: Constants.statusBarHeight,
     height: 160 + Constants.statusBarHeight,
     paddingHorizontal: 8,
@@ -72,7 +73,7 @@ export const theme = StyleSheet.create({
   },
   itemTask: {
     flex: 1,
-    color: '#2C3E50',
+    color: colors.text,
     fontSize: 20,
     fontFamily: 'Exo2Regular'
   },
@@ -109,6 +110,10 @@ export const theme = StyleSheet.create({
   fontRegular: {
     fontSize: 16,
     fontFamily: 'Exo2Regular'
+  },
+  fontBold: {
+    fontSize: 16,
+    fontFamily: 'Exo2Bold'
   },
   fontLight: {
     fontSize: 14,

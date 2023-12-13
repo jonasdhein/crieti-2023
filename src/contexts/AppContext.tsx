@@ -8,8 +8,8 @@ export interface ContextProps {
     getUser: () => void;
     listUsers: () => void;
     balance: number;
+    setBalance: (n: number) => void;
     users: UserProps[];
-    //setBalance: (n: number) => void;
 }
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_BASE_URL;
@@ -41,6 +41,7 @@ export const AppProvider = ({children}) => {
                 user,
                 getUser,
                 balance,
+                setBalance,
                 listUsers,
                 users
             }

@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import { ActivityIndicator, Alert, Dimensions, FlatList, ScrollView, StyleSheet, Text, View } from "react-native"
 import { VictoryChart, VictoryBar, VictoryLine, VictoryTheme, VictoryAxis, VictoryLabel } from 'victory-native';
-import { SafeAreaView } from "react-native-safe-area-context"
-import { UserProps } from '../types/user.t';
 import { colors, theme } from '../themes/Theme';
 import { PixProps } from '../types/pix.t';
 import { Feather } from '@expo/vector-icons';
@@ -11,12 +10,14 @@ import { formatDate, formatDateShort, formatMoney } from '../utils/utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AppContext } from '../contexts/AppContext';
 import * as Animatable from 'react-native-animatable';
+import { getReceived, getSent } from '../services/pix.service';
 
 const { width } = Dimensions.get("screen");
 
 export const PixScreen = ({ navigation }) => {
 
-    const { getUser, user } = useContext(AppContext);
+    const { balance, getUser, user, setBalance } = useContext(AppContext);
+    const isFocused = useIsFocused();
 
     const [load, isLoad] = useState<boolean>(false);
     const [listPix, setListPix] = useState<PixProps[]>([] as PixProps[]);
@@ -28,19 +29,9 @@ export const PixScreen = ({ navigation }) => {
             let listSent = [];
             let listReceived = [];
 
-            const resSent = await axios.get(`/pix/${id}/sent`);
-            if (resSent.status === 200) {
-                if (resSent.data.length > 0) {
-                    listSent = resSent.data;
-                }
-            }
+            listSent = await getSent(id);
 
-            const resReceived = await axios.get(`/pix/${id}/received`);
-            if (resReceived.status === 200) {
-                if (resReceived.data.length > 0) {
-                    listReceived = resReceived.data;
-                }
-            }
+            listReceived = await getReceived(id);
 
             const newList = listSent.concat(listReceived).sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
 
@@ -54,6 +45,9 @@ export const PixScreen = ({ navigation }) => {
                         ...item, balance: saldo, date: formatDateShort(item.createdAt)
                     }
                 });
+
+            console.log('SALDO ATUALIZADO = ', saldo);
+            setBalance(saldo);
 
             setChartData(newListChart);
             setListPix(newList);
@@ -70,10 +64,10 @@ export const PixScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        if (user.id > 0) {
+        if (user.id > 0 && isFocused) {
             getListPix(user.id);
         }
-    }, [user]);
+    }, [user, isFocused]);
 
     const ItemPix = ({ item }) => (
         <View style={theme.itemCard}>
@@ -121,7 +115,7 @@ export const PixScreen = ({ navigation }) => {
                         <Feather name="send" size={26} color="#FFF" />
                     </TouchableOpacity>
                     <View style={{ marginRight: 16 }}>
-                        <Text style={theme.title}>{formatMoney(0)}</Text>
+                        <Text style={theme.title}>{formatMoney(balance)}</Text>
                         <Text style={theme.subtitle}>Saldo</Text>
                     </View>
                 </View>
@@ -131,7 +125,8 @@ export const PixScreen = ({ navigation }) => {
             <VictoryChart
                 domainPadding={{ x: 25 }}
                 padding={{ top: 20, left: 40, right: 20, bottom: 40 }}
-                minDomain={{ y: 0 }}
+                minDomain={{ y: -100 }}
+                maxDomain={{ y: 500 }}
                 width={width} height={200}
                 theme={VictoryTheme.material}>
                 <VictoryBar
