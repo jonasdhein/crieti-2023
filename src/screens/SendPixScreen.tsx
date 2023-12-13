@@ -31,7 +31,7 @@ export const SendPixScreen = ({ navigation }) => {
                 return;
             }
 
-            if (balance - sender.value < 3000) {
+            if (balance - sender.value < -3000) {
                 Alert.alert('Você ultrapassou o limite do cheque especial');
                 return;
             }

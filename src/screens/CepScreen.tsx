@@ -6,8 +6,6 @@ import { colors, theme } from '../themes/Theme';
 
 export const CepScreen = ({ navigation }) => {
 
-    console.log('API=>', process.env.EXPO_PUBLIC_API_KEY);
-
     const [input, setInput] = useState<string>('');
     const [cep, setCep] = useState<CepProps>({} as CepProps);
 
@@ -20,6 +18,13 @@ export const CepScreen = ({ navigation }) => {
             const { data, status } = await axios.get(`https://viacep.com.br/ws/${input}/json/`);
             if (status == 200) {
                 setCep(data);
+
+                const address = data.localidade + ' ' + data.uf;
+
+                console.log('ENDERECO', address);
+                //const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=lajeado&key=${process.env.EXPO_PUBLIC_API_KEY}`);
+                //console.log('GOOGLE', response.data);
+
             } else {
                 Alert.alert('Atenção', 'O CEP informado não foi localizado');
             }

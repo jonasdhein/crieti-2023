@@ -1,10 +1,11 @@
 import axios from "axios";
 import { SendProps } from "../types/send.t";
+import { LoginProps } from "../types/login.t";
 
 export const findUser = async (id: number) => {
     try {
 
-        const { status, data } = await axios.get('/users');
+        const { status, data } = await axios.get('/pix-api/users');
         if (status === 200) {
             const user = data.find(item => item.id === id);
             if (user) {
@@ -18,10 +19,27 @@ export const findUser = async (id: number) => {
     }
 }
 
+export const postlogin = async (payload: LoginProps) => {
+    try {
+
+        const { status, data } = await axios.post('/api/login', payload);
+        if (status === 200) {
+            console.log('LOGIN', data);
+            return data;
+        } else {
+            return [];
+        }
+
+    } catch (err) {
+        console.log('ERR_postlogin=>', err.message);
+        return null;
+    }
+}
+
 export const getUsers = async () => {
     try {
 
-        const { status, data } = await axios.get('/users');
+        const { status, data } = await axios.get('/pix-api/users');
         if (status === 200) {
             return data;
         } else {
@@ -37,7 +55,7 @@ export const getUsers = async () => {
 export const getSent = async (id: number) => {
     try {
 
-        const { status, data } = await axios.get(`/pix/${id}/sent`);
+        const { status, data } = await axios.get(`/pix-api/pix/${id}/sent`);
         if (status === 200) {
             return data;
         }else{
@@ -53,7 +71,7 @@ export const getSent = async (id: number) => {
 export const getReceived = async (id: number) => {
     try {
 
-        const { status, data } = await axios.get(`/pix/${id}/received`);
+        const { status, data } = await axios.get(`/pix-api/pix/${id}/received`);
         if (status === 200) {
             return data;
         }else{
@@ -68,7 +86,7 @@ export const getReceived = async (id: number) => {
 
 export const sendPix = async (payload: SendProps) => {
     try {
-        const { status, data } = await axios.post('/pix/',
+        const { status, data } = await axios.post('/pix-api/pix/',
             payload
         );
 

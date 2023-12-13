@@ -18,3 +18,15 @@ POST http://177.44.248.24/pix-api/pix/
 content-type: application/json
 
 { "senderId": 2, "recipientId": 31, "value": 199.50 }
+
+###
+
+POST http://177.44.248.24/api/login
+content-type: application/json
+
+{ "email": "admin@admin.com", "senha": "123456" }
+
+
+###
+
+GET https://maps.googleapis.com/maps/api/geocode/json?address=lajeado&key=AIzaSyDuPXVoZ7UHbvVoxYBrVXCDZDpgmyW36DY
